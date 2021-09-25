@@ -1,4 +1,5 @@
-
+const apiKey = "64dc9a0c-d02c-41bb-a276-19b7a698222b";
+const apiHost = 'https://todo-api.coderslab.pl';
 
 document.addEventListener('DOMContentLoaded', function() {
   apiListTasks().then(
@@ -48,7 +49,7 @@ function apiCreateTask(title, description) {
   )
 }
 function renderTask(taskId, title, description, status) {
-
+//show list of tasks
     console.log('Zadanie o id =', taskId);
     console.log('tytuł to:', title);
     console.log('opis to:', description);
@@ -119,6 +120,7 @@ function renderTask(taskId, title, description, status) {
     );
 
     function apiListOperationsForTask(taskId) {
+        //show all operations
         return fetch(apiHost + `/api/tasks/`+ taskId +`/operations`,
             {headers: {'Authorization': apiKey}}
         ).then(
@@ -175,7 +177,7 @@ function renderTask(taskId, title, description, status) {
 
     form.addEventListener("submit", function (event) {
         event.preventDefault()
-        apiCreateOperation(taskId, inputForm).then(
+        apiCreateOperationFotTask(taskId, inputForm).then(
             function (response) {
                 renderOperation(ul, status, response.data.id, response.data.description, response.data.timeSpent);
             }
@@ -215,6 +217,23 @@ function renderTask(taskId, title, description, status) {
             buttonDelete.className = "btn btn-outline-danger btn-sm"
             buttonDelete.innerText = "Delete"
             controlDiv.appendChild(buttonDelete)
+            buttonAdd15.addEventListener('click', function() {
+            apiUpdateOperation(operationId, operationDescription, timeSpent + 15).then(
+            function(response) {
+            time.innerText = formatTime(response.data.timeSpent);
+            timeSpent = response.data.timeSpent;
+    }
+  );
+});
+            buttonAdd1H.addEventListener('click', function() {
+            apiUpdateOperation(operationId, operationDescription, timeSpent + 60).then(
+            function(response) {
+            time.innerText = formatTime(response.data.timeSpent);
+            timeSpent = response.data.timeSpent;
+    }
+  );
+});
+
 
             buttonDelete.addEventListener('click', function() {
   apiDeleteOperation(operationId).then(
@@ -234,6 +253,7 @@ function renderTask(taskId, title, description, status) {
     }
 
     function formatTime(timeSpent) {
+        //set timer
         const hours = Math.floor(timeSpent / 60);
         const minutes = timeSpent % 60;
         if (hours > 0) {
@@ -244,6 +264,7 @@ function renderTask(taskId, title, description, status) {
     }
 
     function apiDeleteTask(taskId) {
+        //delete task from lisdt
         return fetch(
             apiHost + '/api/tasks/' + taskId,
             {
@@ -260,7 +281,8 @@ function renderTask(taskId, title, description, status) {
         )
     }
 
-    function apiCreateOperation(taskId, description) {
+    function apiCreateOperationFotTask(taskId, description) {
+        //add new task to list
         return fetch(
             apiHost + '/api/task/' + taskId + '/operations',
             {
@@ -279,6 +301,7 @@ function renderTask(taskId, title, description, status) {
     }
 }
 function apiDeleteOperation(operationId) {
+    //delete chosen operation in task
   return fetch(
     apiHost + '/api/operations/' + operationId,
     {
@@ -295,7 +318,8 @@ function apiDeleteOperation(operationId) {
   )
 }
 function apiUpdateTask(taskId, title, description, status) {
-  return fetch(
+  //Ends edit possibility for task
+    return fetch(
     apiHost + '/api/tasks/' + taskId,
     {
       headers: { Authorization: apiKey, 'Content-Type': 'application/json' },
@@ -312,6 +336,7 @@ function apiUpdateTask(taskId, title, description, status) {
   );
 }
 function apiUpdateOperation(operationId, description, timeSpent) {
+  //Add time to clock 15min or 1h
   return fetch(
     apiHost + '/api/operations/' + operationId,
     {
